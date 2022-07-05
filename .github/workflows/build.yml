@@ -1,0 +1,36 @@
+name: Build .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    if: "! contains(toJSON(github.event.commits.*.message), '[ci skip]')"
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Publish x64 Tools Full
+      run: dotnet publish Run8Tools\Run8Tools.csproj -c Release -o build/Run8ToolsFull --sc -f net6.0 -r win-x64 /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true
+    - name: Publish x64 Tools Slim
+      run: dotnet publish Run8Tools\Run8Tools.csproj -c Release -o build/Run8ToolsSlim --no-self-contained -f net6.0 -r win-x64
+    - name: Upload x64 Tools Full Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Run8ToolsFull
+        path: build/Run8ToolsFull/**
+        if-no-files-found: warn
+    - name: Upload x64 Tools Slim Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Run8ToolsSlim
+        path: build/Run8ToolsSlim/**
+        if-no-files-found: warn
