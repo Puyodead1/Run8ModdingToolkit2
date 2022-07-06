@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Run8Tools
+namespace Run8Tools.InternalClasses
 {
 	internal struct EW
 	{

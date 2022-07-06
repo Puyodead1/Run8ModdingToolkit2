@@ -1,8 +1,9 @@
 ﻿using SharpDX;
 using JeremyAnsel.Media.WavefrontObj;
 using MoreLinq;
+using Run8Tools.InternalClasses;
 
-namespace Run8Tools
+namespace Run8Tools.Commands
 {
     public class Avatar : ICommand
     {
@@ -23,6 +24,18 @@ namespace Run8Tools
                 return 1;
             }
 
+            if (!inputFilePath.EndsWith(".rn8"))
+            {
+                Console.WriteLine("Not a valid model file");
+                return 1;
+            }
+
+            if (!inputFilePath.Contains("Avatar") && !args.Contains("--force"))
+            {
+                Console.WriteLine("This doesn't look like a valid avatar model file.");
+                return 1;
+            }
+
             string? inputFileDirectory = Path.GetDirectoryName(inputFilePath);
             if (inputFileDirectory == "")
             {
@@ -36,17 +49,16 @@ namespace Run8Tools
 
             try
             {
-                DoWork(inputFilePath, outputFilePath);
+                return DoWork(inputFilePath, outputFilePath);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Command Failed: " + ex.Message);
                 return 1;
             }
-            return 0;
         }
 
-        public void DoWork(string InputFilePath, string outputFilePath)
+        public int DoWork(string InputFilePath, string outputFilePath)
         {
             EW[] VertexBuffer;
             int[] IndexBuffer;
@@ -247,6 +259,8 @@ namespace Run8Tools
                     fs.Dispose();
                 }
             }
+
+            return 0;
         }
     }
 }

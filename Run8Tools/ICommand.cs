@@ -9,5 +9,6 @@ namespace Run8Tools
     internal interface ICommand
     {
         public int Main(string[] args);
+        public int DoWork(string inputFile, string outputFile);
     }
 }

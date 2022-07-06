@@ -1,4 +1,6 @@
-﻿namespace Run8Tools
+﻿using Run8Tools.Commands;
+
+namespace Run8Tools
 {
     class Program
     {
@@ -16,6 +18,8 @@
             {
                 case "avatar":
                     return new Avatar().Main(args);
+                case "texture":
+                    return new Texture().Main(args);
                 default:
                     Console.WriteLine("Unknown mode");
                     return 1;
